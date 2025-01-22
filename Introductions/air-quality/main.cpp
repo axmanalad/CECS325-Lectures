@@ -6,19 +6,36 @@
 int main() {
     // Above:
     // - int is the return type of the function called "main".
+    //   Before this function ends, we must return an integer value. By tradition,
+    //   returning 0 indicates the main was successful, and any other value indicates
+    //   that we encountered an error.
 
+    // std::cout is used to print. "see-out".
     std::cout << "Please enter the amount of PM2.5, in ug/m^3: ";
-    double pm25;
-    std::cin >> pm25;
+    // Unlike Python, strings are ALWAYS in double-quotes ", NEVER in single-quotes '
 
+    // To declare a variable, we MUST start with its DATA TYPE. The C++ compiler will make sure
+    // that we ONLY assign that variable with values of the same type.
+    double pm25;
+    // "double" is a floating-point number type.
+
+    // std::cin is used to read values from the console. "see-in".
+    std::cin >> pm25; // give a value to the variable pm25 by reading keyboard input and converting it to a double.
+
+    // We can declare more than one variable of the same type on the same line.
     double cLow, cHigh;
     int iLow, iHigh;
-    if (pm25 >= 0 && pm25 <= 12.0) {
+    // int is for integers.
+
+    // Conditional branching is done with "if" statements. The condition is ALWAYS wrapped in parentheses.
+    // Matching curly braces { } start and end the "then" block of the branch.
+    if (pm25 <= 12.0) {
         cLow = 0.0;
         cHigh = 12.0;
         iLow = 0;
         iHigh = 50;
     }
+    // There is no "elif"; we write "else if". && is used for "and".
     else if (pm25 > 12.0 && pm25 <= 35.4) {
         cLow = 12.1;
         cHigh = 35.4;
@@ -62,8 +79,14 @@ int main() {
         iHigh = 999;
     }
 
+    // When arithmetic involves different data types, values are converted into the most-precise type
+    // before doing the arithmetic.
+    // Break down this expression to recognize which steps are done with integer arithmetic, and which steps
+    // are floating point arithmetic.
     double aqi = (iHigh - iLow) / (cHigh - cLow) * (pm25 - cLow) + iLow;
     std::cout << "AQI for PM2.5: " << aqi << std::endl;
+    // std::endl is "end line", forcing the *next* cout to start on the next line of the console.
+
     if (aqi <= 50) {
         std::cout << "Air Quality: Good" << std::endl;
     }
