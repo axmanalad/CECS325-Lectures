@@ -1,6 +1,8 @@
 #include "palindromes.h"
 
 bool isPalindrome(std::string s) {
+    // We should actually be passing "s" as a const reference, but that's for later.
+
     size_t i = 0;
     size_t j = s.size() - 1;
 
