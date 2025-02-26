@@ -12,6 +12,7 @@ double getAngle() {
     }
     return angle;
 }
+
 double getGunpowder() {
     double gunpowder = -1;
     while (gunpowder < 0) {

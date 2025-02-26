@@ -2,7 +2,6 @@
 
 bool isPalindrome(std::string s) {
     // We should actually be passing "s" as a const reference, but that's for later.
-
     size_t i = 0;
     size_t j = s.size() - 1;
 
@@ -10,6 +9,7 @@ bool isPalindrome(std::string s) {
         while (!isalpha(s[i])) {
             i++;
         }
+        // s[i] is a letter
         while (!isalpha(s[j])) {
             j--;
         }
@@ -21,10 +21,8 @@ bool isPalindrome(std::string s) {
         if (s[i] != s[j]) {
             return false;
         }
-        else {
-            i++;
-            j--;
-        }
+        i++;
+        j--;
     }
     return true;
 }
