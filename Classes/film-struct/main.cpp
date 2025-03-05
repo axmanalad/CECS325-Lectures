@@ -14,6 +14,8 @@ void printFilm(const Film& film) {
 
 int main() {
     Film f {"Dog Man", 2025, 87, "PG"};
+    f.duration = -10;
+
     printFilm(f);
     return 0;
 }
