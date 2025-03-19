@@ -31,6 +31,8 @@ void CharStack::push(char c) {
         // Save the new data size.
         m_dataSize *= 2;
 
+        delete[] m_data;
+        m_data = newData;
         // Now continue, knowing we have enough space for the new element.
     }
 
@@ -42,8 +44,13 @@ void CharStack::push(char c) {
 }
 
 char CharStack::pop() {
-    --m_count;
-    return m_data[m_count];
+    if (m_count > 0) {
+        --m_count;
+        return m_data[m_count];
+    }
+    else {
+        throw std::runtime_error("Can't pop from empty stack");
+    }
     // Notice how the top element isn't actually erased. But what happens
     // the next time we push a value?
 }

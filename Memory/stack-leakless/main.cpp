@@ -2,14 +2,30 @@
 
 #include "CharStack.h"
 
+CharStack makeStack() {
+    CharStack temp{};
+    for (size_t i {0}; i < 10; ++i) {
+        temp.push('a');
+    }
+    // Temp is allocated in automatic storage. When makeStack returns,
+    // what happens to temp and the data array it owns?
+    // It is destroyed!
+
+    // But we want to use the CharStack constructed here back in the main...
+    // So how can that happen?
+
+
+
+    // Normally, we would just return temp here. The std::move just exhibits
+    // an OLDER behavior in C++ that is still worth knowing.
+    return std::move(temp);
+}
+
 int main()
 {
-
-    // Demonstrate a subtle MEMORY LEAK in the CharStack class.
-    for (size_t i = 0; i < 1000000; ++i) {
+    // We fixed stacks leaking their array when they are destroyed.
+    for (size_t i = 0; i < 10; ++i) {
         CharStack s {};
-        // s allocates a char[4] in dynamic storage when constructed.
-        // At the end of the loop, s is destroyed.
         // The CharStack destructor deletes the dynamic array owned by s.
         // No leaking!
     }
@@ -19,35 +35,53 @@ int main()
     std::cout << "Input a character to continue...";
     std::cin >> pattern;
 
-
-    // Except we still have a different problem..
+    // A proper copy constructor fixes shallow copies sharing a data array,
+    // leading to double deletion.
     CharStack s1 {};
-    for (size_t i = 0; i < 1000000; ++i) {
+    for (size_t i = 0; i < 10; ++i) {
         CharStack copy {s1};
         // Our proper copy-constructor does a *deep* copy of s1. "copy" has its
         // own dynamic array that has the same data as s1.
         // When copy goes out scope, its destructor destroys its own array.
     }
 
-    // Similarly...
-    for (size_t i = 0; i < 1000000; ++i) {
+    std::cout << "Copy constructor loop done" << std::endl;
+    std::cout << "Input a character to continue...";
+    std::cin >> pattern;
+
+    // A proper copy-assignment operator fixes shallow assignment sharing a data array,
+    // and also failing to delete the LHS's existing array.
+    for (size_t i = 0; i < 10; ++i) {
         CharStack s2 {}; // default constructor gives s2 a dynamic array.
         s2 = s1; // this is the COPY ASSIGNMENT operator.
-
-        // By default, the copy assignment operator does a member-wise copy
-        // of rhs into lhs. This is DOUBLE TROUBLE:
-        // 1. The pointer to lhs's m_data array is lost, leaking it.
-        // 2. lhs.m_data will point to rhs.m_data, causing the double-delete problem
-        //    from before.
-        // A proper copy-assignment operator fixes both of these; it deletes
-        // any existing dynamic memory owned by the object, and then deep-copies
-        // the rhs.
+        // To assign s2 a copy of s1, we first delete s2's data array, and then
+        // do a deep-copy of s1's array.
     }
-    CharStack s2 {};
-    s2 = s1;
-             // copy assign destroys s2's existing array, then deep-copies s1's.
+
+    // No more memory leaks!
+    std::cout << "Copy assignment loop done" << std::endl;
+    std::cout << "Input a character to continue...";
+    std::cin >> pattern;
 
 
+    // One last demo: what happens when an object is returned from a function?
+    // makeStack will construct a stack, push 10 characters, and then return
+    // that stack to us.
+    CharStack r {makeStack()};
+    std::cout << r.size() << std::endl;
+    // Where is r in memory? Where is the stack that was constructed in
+    // makeStack()? What is the relationship between r and the other stack?
 
+
+    // A modern C++ compiler, with the std::move in makeStack(), will ELIDE
+    // the "temp" variable completely, instead using "r" back in the main to store
+    // the stack directly, so no copy has to be made.
+
+    // Another example of copy elision:
+    CharStack e {CharStack{}}; // default construct a CharStack, then copy that into e.
+    // Is the temporary empty stack really necessary? No. So the compiler elides the copy,
+    // instead directly constructing e with the default constructor.
+
+    std::cout << "Program ending. Automatic storage will be cleared." << std::endl;
     return 0;
 }

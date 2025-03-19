@@ -68,7 +68,7 @@ void CharStack::push(char c) {
             newData[i] = m_data[i];
         }
         m_dataSize *= 2;
-        delete[] m_data;
+            delete[] m_data;
         m_data = newData;
     }
 

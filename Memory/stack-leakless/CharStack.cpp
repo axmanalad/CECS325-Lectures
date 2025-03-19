@@ -4,19 +4,26 @@
 
 #include "CharStack.h"
 
+#include <iostream>
 #include <stdexcept>
 
+int CharStack::m_nextId {0};
+
 CharStack::CharStack()
-    : m_data{new char[4]}, m_dataSize{4} {
+    : m_id{++m_nextId}, m_data{new char[4]}, m_dataSize{4} {
+    std::cout << "Default construct stack " << m_id << std::endl;
 }
 
 CharStack::~CharStack() {
+    std::cout << "Destruct stack " << m_id << std::endl;
     delete[] m_data;
 }
 
 CharStack::CharStack(const CharStack &other)
-    : m_data{new char[other.m_dataSize]}, m_dataSize{other.m_dataSize}, m_count{other.m_count}
+    : m_id{++m_nextId}, m_data{new char[other.m_dataSize]}, m_dataSize{other.m_dataSize},
+      m_count{other.m_count}
 {
+    std::cout << "Construct stack " << m_id << " as a copy of stack " << other.m_id << std::endl;
     // Perform a DEEP COPY of other's m_data array.
     for (size_t i = 0; i < m_count; ++i) {
         m_data[i] = other.m_data[i];
@@ -24,7 +31,7 @@ CharStack::CharStack(const CharStack &other)
 }
 
 CharStack& CharStack::operator=(const CharStack &rhs) {
-
+    std::cout << "Override stack " << m_id << " as a copy of stack " << rhs.m_id << std::endl;
     // In a copy assignment operator, LHS *already exists* and has an existing
     // m_data array that must be destroyed, before deep copying rhs.
     // We first make sure that we aren't copy-assigning to OURSELF.
