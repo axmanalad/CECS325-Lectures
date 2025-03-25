@@ -23,9 +23,13 @@ CharStack::CharStack(const CharStack &other)
     }
 }
 
-CharStack::CharStack(CharStack &&other) noexcept
-    : m_data{new char[other.m_dataSize]}, m_dataSize{other.m_dataSize}, m_count{other.m_count} {
+CharStack::CharStack(CharStack &&other)
+    : m_data{other.m_data},
+      m_dataSize{other.m_dataSize},
+      m_count{other.m_count} {
     other.m_data = nullptr;
+    other.m_count = 0;
+    other.m_dataSize = 0;
 }
 
 CharStack& CharStack::operator=(const CharStack &rhs) {
@@ -46,17 +50,25 @@ CharStack& CharStack::operator=(const CharStack &rhs) {
     return *this;
 }
 
-CharStack & CharStack::operator=(CharStack &&rhs) noexcept {
+CharStack& CharStack::operator=(CharStack &&rhs) {
     if (this == &rhs) {
         return *this;
     }
 
+    // Delete our current array.
     delete[] m_data;
+
+    // Take over rhs's array with a shallow copy.
     m_data = rhs.m_data;
     m_count = rhs.m_count;
     m_dataSize = rhs.m_dataSize;
 
+    // Release rhs from the burden of deleting its array, but pointing
+    // it to null.
     rhs.m_data = nullptr;
+    rhs.m_count = 0;
+    rhs.m_dataSize = 0;
+
     return *this;
 }
 
@@ -87,4 +99,20 @@ size_t CharStack::size() const {
 
 void CharStack::clear() {
     m_count = 0;
+}
+CharStack makeStack();
+
+int main() {
+    CharStack s{};
+    // Use s for a while...
+
+    s = makeStack();
+    // Use this new stack for a while...
+    // What happened to the old stack?
+
+
+
+
+
+    s.clear();
 }

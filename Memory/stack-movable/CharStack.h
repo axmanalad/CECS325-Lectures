@@ -10,10 +10,10 @@ public:
     CharStack();
     ~CharStack();
     CharStack(const CharStack& other);
-    CharStack(CharStack&& other) noexcept;
+    CharStack(CharStack&& other);
 
     CharStack& operator=(const CharStack& rhs);
-    CharStack& operator=(CharStack&& rhs) noexcept;
+    CharStack& operator=(CharStack&& rhs);
 
     void push(char c);
     char pop();
