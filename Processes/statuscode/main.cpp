@@ -1,4 +1,5 @@
 #include <iostream>
+#include <thread>
 #include <unistd.h>
 #include <sys/wait.h>
 
@@ -9,7 +10,8 @@ int main()
     // Download a file with curl, then do something with it.
     int cid {fork()};
     if (cid == 0) {
-        std::cout << "Starting download..." << std::endl;
+            std::cout << "Starting download..." << std::endl;
+        std::this_thread::sleep_for(std::chrono::seconds(10));
         // Child process. Run curl.
         execl("/bin/curl",
             "curl",
