@@ -18,7 +18,7 @@ int main()
             "-L",
             "-o",
             "demo.cpp",
-            "https://drive.google.com/uc?export=download&id=17vxURsbI0ubvgERu9vejsaTkTooIOhCS",
+            "https://adrive.google.com/uc?export=download&id=17vxURsbI0ubvgERu9vejsaTkTooIOhCS",
             static_cast<char*>(nullptr));
     }
     else {
