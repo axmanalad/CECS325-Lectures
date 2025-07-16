@@ -43,7 +43,7 @@ int main() {
     }
 
     // 2. Range-based for loop.
-    for (int& d : digits) {
+    for (int d : digits) {
      //   std::cout << d << std::endl;
         d *= 2;
     }

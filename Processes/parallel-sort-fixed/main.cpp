@@ -64,5 +64,8 @@ int main() {
     }
     std::cout << std::endl << std::endl;
 
+
+    delete v1;
+
     return 0;
 }
